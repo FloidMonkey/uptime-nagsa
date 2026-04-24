@@ -1,9 +1,43 @@
 services:
+  mysql:
+    image: mysql:8.0
+    container_name: uptime-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: uptime_nagsa
+      MYSQL_USER: uptime
+      MYSQL_PASSWORD: uptime2026*
+      MYSQL_ROOT_PASSWORD: root2026*
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+    networks:
+      - uptime-net
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "uptime", "-puptime2026*"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 120s
+
   uptime-kuma:
     image: louislam/uptime-kuma:2
+    container_name: uptime-nagsa
     restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      # Required for SNMPv3 with DES privacy — OpenSSL 3.x disables DES by default
+      NODE_OPTIONS: --openssl-legacy-provider
     volumes:
-      - ./data:/app/data
+      - ./data/uptime:/app/data
+      # Patched SNMP monitor: adds SNMPv3 authPriv support and Counter64 formatting
+      - ./server/monitor-types/snmp.js:/app/server/monitor-types/snmp.js
     ports:
-      # <Host Port>:<Container Port>
       - "3001:3001"
+    networks:
+      - uptime-net
+
+networks:
+  uptime-net:
+    driver: bridge
