@@ -1,0 +1,12 @@
+{
+    "id": "cisco-switch",
+    "name": "Cisco IOS Switch",
+    "description": "Ping + Uptime + CPU 5s % + Free RAM",
+    "snmpVersion": "2c",
+    "monitors": [
+        { "name": "{device} - Ping",     "type": "ping" },
+        { "name": "{device} - Uptime",   "type": "snmp", "oid": ".1.3.6.1.2.1.1.3.0",               "condition": ">=", "value": "0",   "unit": "cs" },
+        { "name": "{device} - CPU 5s",   "type": "snmp", "oid": ".1.3.6.1.4.1.9.9.109.1.1.1.1.3.1", "condition": "<=", "value": "100", "unit": "%" },
+        { "name": "{device} - Free RAM", "type": "snmp", "oid": ".1.3.6.1.4.1.9.9.48.1.1.1.6.1",    "condition": ">=", "value": "0",   "unit": "bytes" }
+    ]
+}

@@ -103,8 +103,9 @@ class SNMPMonitorType extends MonitorType {
             }
 
             const value = formatValue(varbinds[0]);
+            const unit = monitor.snmpUnit || monitor.snmp_unit || "";
             heartbeat.status = UP;
-            heartbeat.msg = `SNMP OK: ${value}`;
+            heartbeat.msg = `SNMP OK: ${value}${unit ? " " + unit : ""}`;
         } finally {
             if (session) {
                 session.close();

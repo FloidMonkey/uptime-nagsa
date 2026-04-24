@@ -196,6 +196,7 @@ class Monitor extends BeanModel {
             cacheBust: this.getCacheBust(),
             remote_browser: this.remote_browser,
             snmpOid: this.snmpOid,
+            snmpUnit: this.snmpUnit,
             jsonPathOperator: this.jsonPathOperator,
             snmpVersion: this.snmpVersion,
             smtpSecurity: this.smtpSecurity,

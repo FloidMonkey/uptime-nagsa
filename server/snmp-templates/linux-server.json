@@ -1,0 +1,12 @@
+{
+    "id": "linux-server",
+    "name": "Linux Server (Net-SNMP)",
+    "description": "Ping + Uptime + CPU load 1min + RAM disponible",
+    "snmpVersion": "2c",
+    "monitors": [
+        { "name": "{device} - Ping",          "type": "ping" },
+        { "name": "{device} - Uptime",        "type": "snmp", "oid": ".1.3.6.1.2.1.1.3.0",        "condition": ">=", "value": "0",     "unit": "cs" },
+        { "name": "{device} - CPU load 1min", "type": "snmp", "oid": ".1.3.6.1.4.1.2021.10.1.3.1","condition": "<=", "value": "10.00", "unit": "load" },
+        { "name": "{device} - RAM available", "type": "snmp", "oid": ".1.3.6.1.4.1.2021.4.6.0",   "condition": ">=", "value": "0",     "unit": "KB" }
+    ]
+}

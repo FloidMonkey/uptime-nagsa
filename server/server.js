@@ -191,6 +191,7 @@ const { resetChrome } = require("./monitor-types/real-browser-monitor-type");
 const { EmbeddedMariaDB } = require("./embedded-mariadb");
 const { SetupDatabase } = require("./setup-database");
 const { chartSocketHandler } = require("./socket-handlers/chart-socket-handler");
+const { snmpSocketHandler } = require("./socket-handlers/snmp-socket-handler");
 
 app.use(express.json());
 
@@ -1716,6 +1717,7 @@ let needSetup = false;
         remoteBrowserSocketHandler(socket);
         generalSocketHandler(socket, server);
         chartSocketHandler(socket);
+        snmpSocketHandler(socket, server);
 
         log.debug("server", "added all socket handlers");
 

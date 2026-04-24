@@ -1,0 +1,12 @@
+{
+    "id": "fortigate",
+    "name": "Fortigate Firewall",
+    "description": "Ping + Uptime + CPU % + RAM %",
+    "snmpVersion": "3",
+    "monitors": [
+        { "name": "{device} - Ping",   "type": "ping" },
+        { "name": "{device} - Uptime", "type": "snmp", "oid": ".1.3.6.1.2.1.1.3.0",             "condition": ">=", "value": "0",   "unit": "cs" },
+        { "name": "{device} - CPU %",  "type": "snmp", "oid": ".1.3.6.1.4.1.12356.101.4.1.3.0", "condition": "<=", "value": "100", "unit": "%" },
+        { "name": "{device} - RAM %",  "type": "snmp", "oid": ".1.3.6.1.4.1.12356.101.4.1.4.0", "condition": "<=", "value": "100", "unit": "%" }
+    ]
+}

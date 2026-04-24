@@ -1,0 +1,12 @@
+{
+    "id": "generic-switch",
+    "name": "Switch Genérico SNMP",
+    "description": "Ping + Uptime + Tráfico In/Out puerto 1",
+    "snmpVersion": "2c",
+    "monitors": [
+        { "name": "{device} - Ping",         "type": "ping" },
+        { "name": "{device} - Uptime",       "type": "snmp", "oid": ".1.3.6.1.2.1.1.3.0",         "condition": ">=", "value": "0", "unit": "cs" },
+        { "name": "{device} - Traffic In",   "type": "snmp", "oid": ".1.3.6.1.2.1.31.1.1.1.6.1",  "condition": ">=", "value": "0", "unit": "bytes" },
+        { "name": "{device} - Traffic Out",  "type": "snmp", "oid": ".1.3.6.1.2.1.31.1.1.1.10.1", "condition": ">=", "value": "0", "unit": "bytes" }
+    ]
+}

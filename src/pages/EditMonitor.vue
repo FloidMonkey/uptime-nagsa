@@ -735,20 +735,25 @@
 
                             <div v-if="monitor.type === 'snmp'" class="my-3">
                                 <label for="snmp_oid" class="form-label">{{ $t("OID (Object Identifier)") }}</label>
-                                <input
-                                    id="snmp_oid"
-                                    v-model="monitor.snmpOid"
-                                    :title="
-                                        $t('Please enter a valid OID.') +
-                                        ' ' +
-                                        $t('Example:', ['1.3.6.1.4.1.9.6.1.101'])
-                                    "
-                                    type="text"
-                                    class="form-control"
-                                    pattern="^([0-2])((\.0)|(\.[1-9][0-9]*))*$"
-                                    placeholder="1.3.6.1.4.1.9.6.1.101"
-                                    required
-                                />
+                                <div class="input-group">
+                                    <input
+                                        id="snmp_oid"
+                                        v-model="monitor.snmpOid"
+                                        :title="
+                                            $t('Please enter a valid OID.') +
+                                            ' ' +
+                                            $t('Example:', ['1.3.6.1.4.1.9.6.1.101'])
+                                        "
+                                        type="text"
+                                        class="form-control"
+                                        pattern="^([0-2])((\.0)|(\.[1-9][0-9]*))*$"
+                                        placeholder="1.3.6.1.4.1.9.6.1.101"
+                                        required
+                                    />
+                                    <button type="button" class="btn btn-outline-secondary" @click="openSnmpWalk">
+                                        <i class="bi bi-search me-1"></i>Browse OIDs
+                                    </button>
+                                </div>
                                 <div class="form-text">{{ $t("snmpOIDHelptext") }}</div>
                             </div>
 
@@ -773,6 +778,24 @@
                                     placeholder="SNMPv3 username"
                                     required
                                 />
+                            </div>
+
+                            <div v-if="monitor.type === 'snmp'" class="my-3">
+                                <label for="snmp_unit" class="form-label">Unit (optional)</label>
+                                <input
+                                    id="snmp_unit"
+                                    v-model="monitor.snmpUnit"
+                                    type="text"
+                                    class="form-control"
+                                    placeholder="e.g. %, KB, ms, bytes"
+                                />
+                                <div class="form-text">Appended to the heartbeat message: SNMP OK: 42 %</div>
+                            </div>
+
+                            <div v-if="monitor.type === 'snmp'" class="my-3">
+                                <button type="button" class="btn btn-outline-info btn-sm" @click="openDeviceTemplate">
+                                    <i class="bi bi-collection me-1"></i>Apply Device Template
+                                </button>
                             </div>
 
                             <div v-if="monitor.type === 'smtp'" class="my-3">
@@ -3010,6 +3033,8 @@
             <ProxyDialog ref="proxyDialog" @added="addedProxy" />
             <CreateGroupDialog ref="createGroupDialog" @added="addedDraftGroup" />
             <RemoteBrowserDialog ref="remoteBrowserDialog" />
+            <SNMPWalkModal ref="snmpWalkModal" @select-oid="onSelectOid" />
+            <DeviceTemplateModal ref="deviceTemplateModal" />
             <Confirm
                 ref="confirmLowIntervalValue"
                 btn-style="btn-danger"
@@ -3048,6 +3073,8 @@ import isFQDN from "validator/lib/isFQDN";
 import isIP from "validator/lib/isIP";
 import HiddenInput from "../components/HiddenInput.vue";
 import EditMonitorConditions from "../components/EditMonitorConditions.vue";
+import SNMPWalkModal from "../components/SNMPWalkModal.vue";
+import DeviceTemplateModal from "../components/DeviceTemplateModal.vue";
 
 const toast = useToast();
 
@@ -3137,6 +3164,8 @@ export default {
         TagsManager,
         VueMultiselect,
         EditMonitorConditions,
+        SNMPWalkModal,
+        DeviceTemplateModal,
     },
 
     data() {
@@ -3751,6 +3780,26 @@ message HealthCheckResponse {
         this.kafkaSaslMechanismOptions = kafkaSaslMechanismOptions;
     },
     methods: {
+        openSnmpWalk() {
+            this.$refs.snmpWalkModal.show({
+                hostname: this.monitor.hostname,
+                port: this.monitor.port,
+                snmpVersion: this.monitor.snmpVersion,
+                snmpCommunity: this.monitor.radiusPassword,
+                snmpV3Username: this.monitor.snmpV3Username,
+                snmpAuthProtocol: this.monitor.snmpAuthProtocol,
+                snmpAuthPass: this.monitor.snmpAuthPass,
+                snmpPrivProtocol: this.monitor.snmpPrivProtocol,
+                snmpPrivPass: this.monitor.snmpPrivPass,
+            });
+        },
+        onSelectOid(oid) {
+            this.monitor.snmpOid = oid;
+        },
+        openDeviceTemplate() {
+            this.$refs.deviceTemplateModal.show();
+        },
+
         /**
          * Initialize the edit monitor form
          * @returns {void}
