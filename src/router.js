@@ -162,11 +162,11 @@ const routes = [
                         path: "/maintenance/clone/:id",
                         component: EditMaintenance,
                     },
-                    {
-                        path: "/nagsa-dashboard",
-                        component: NagsaDashboard,
-                    },
                 ],
+            },
+            {
+                path: "/nagsa-dashboard",
+                component: NagsaDashboard,
             },
         ],
     },
