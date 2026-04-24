@@ -36,12 +36,12 @@ export default {
                     this.$router.push("/status/" + entryPage.replace("statusPage-", ""));
                 } else {
                     // should the old setting style still exist here?
-                    this.$router.push("/dashboard");
+                    this.$router.push("/nagsa-dashboard");
                 }
             } else if (res.type === "setup-database") {
                 this.$router.push("/setup-database");
             } else {
-                this.$router.push("/dashboard");
+                this.$router.push("/nagsa-dashboard");
             }
         } catch (e) {
             alert("Cannot connect to the backend server. Did you start the backend server? (npm run start-server-dev)");
