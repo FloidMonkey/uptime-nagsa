@@ -2,7 +2,64 @@
     <img src="./public/icon.svg" width="128" alt="Uptime Kuma Logo" />
 </div>
 
-# Uptime Kuma
+# Uptime NAGSA
+
+> Fork de [Uptime Kuma 2.2.1](https://github.com/louislam/uptime-kuma) personalizado para NAGSA — Monitoreo de Red.
+
+## Modificaciones NAGSA
+
+### Dashboard PRTG-style (`/nagsa-dashboard`)
+
+Vista de árbol jerárquico al estilo PRTG Network Monitor con 3 niveles:
+
+```
+◉ Uptime Nagsa
+├─ 📁 Grupo 1
+│  ├─ 🖥 Equipo A    10.1.1.1  [OK]
+│  │  ├─ ● Ping
+│  │  └─ ● CPU %
+│  └─ 🖥 Equipo B    10.1.1.2  [Down]
+└─ 📁 Grupo 2
+   └─ 🖥 Equipo C    10.1.1.3  [OK]
+```
+
+- **Grupos lógicos** — monitores `type:group` sin flag `_nd`
+- **Equipos explícitos** — monitores `type:group` con `description: {"_nd":1, brand, model, notes, icon}`
+- **Equipos virtuales** — agrupación automática por hostname para sensores no asignados
+- **Adopción automática** — al definir un equipo virtual, sus sensores se re-parentan automáticamente
+- **Connector lines** — líneas jerárquicas ├─ └─ │ generadas dinámicamente
+- **Status bar** — contadores Down / Warning / Up / Paused con filtro inline
+- **Filtro de árbol** — busca por nombre de grupo, equipo o sensor
+
+### Configuración NAGSA (`/nagsa-settings`)
+
+- **Iconos de dispositivos** — upload de imágenes (PNG/SVG/JPG/GIF, máx 256 KB), almacenados en MySQL
+- **Biblioteca integrada** — 32 iconos de tipos de dispositivo + 61 logos de fabricantes (SVGs estáticos)
+- **Marcas/Fabricantes** — registro de marcas con autocompletado nativo en el modal de equipo
+
+### Rutas y navegación
+
+- Página de inicio → `/nagsa-dashboard` (reemplaza `/dashboard`)
+- Título "Uptime Nagsa" → link a `/nagsa-dashboard`
+- Botón ⚙ en toolbar → `/nagsa-settings`
+
+### Archivos nuevos/modificados
+
+| Archivo | Cambio |
+|---------|--------|
+| `src/pages/NagsaDashboard.vue` | Dashboard principal PRTG-style |
+| `src/pages/NagsaSettings.vue` | Página de configuración (iconos + marcas) |
+| `src/nagsa-icon-library.js` | Catálogo de iconos built-in |
+| `public/nagsa/icons/devices/` | 32 SVGs de tipos de dispositivo |
+| `public/nagsa/icons/vendors/` | 61 SVGs de fabricantes |
+| `server/server.js` | Socket events `nagsa:settings:get/save`, redirect a nagsa-dashboard |
+| `server/uptime-kuma-server.js` | `entryPage = "nagsa-dashboard"` |
+| `src/layouts/Layout.vue` | Links de título apuntan a nagsa-dashboard |
+| `src/router.js` | Rutas para NagsaDashboard y NagsaSettings |
+
+---
+
+# Uptime Kuma (original)
 
 Uptime Kuma is an easy-to-use self-hosted monitoring tool.
 

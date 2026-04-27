@@ -264,7 +264,7 @@ let needSetup = false;
         } else if (uptimeKumaEntryPage && uptimeKumaEntryPage.startsWith("statusPage-")) {
             response.redirect("/status/" + uptimeKumaEntryPage.replace("statusPage-", ""));
         } else {
-            response.redirect("/dashboard");
+            response.redirect("/nagsa-dashboard");
         }
     });
 
@@ -731,7 +731,10 @@ let needSetup = false;
                 let notificationIDList = monitor.notificationIDList;
                 delete monitor.notificationIDList;
 
-                // Ensure status code ranges are strings
+                // Ensure status code ranges are strings (groups don't use this field)
+                if (!monitor.accepted_statuscodes) {
+                    monitor.accepted_statuscodes = [];
+                }
                 if (!monitor.accepted_statuscodes.every((code) => typeof code === "string")) {
                     throw new Error("Accepted status codes are not all strings");
                 }
@@ -822,7 +825,10 @@ let needSetup = false;
                     removeGroupChildren = true;
                 }
 
-                // Ensure status code ranges are strings
+                // Ensure status code ranges are strings (groups don't use this field)
+                if (!monitor.accepted_statuscodes) {
+                    monitor.accepted_statuscodes = [];
+                }
                 if (!monitor.accepted_statuscodes.every((code) => typeof code === "string")) {
                     throw new Error("Accepted status codes are not all strings");
                 }
@@ -1703,6 +1709,29 @@ let needSetup = false;
                     ok: false,
                     msg: e.message,
                 });
+            }
+        });
+
+        // ── NAGSA custom settings (icons + brands) ────────────
+        socket.on("nagsa:settings:get", async (callback) => {
+            try {
+                checkLogin(socket);
+                const icons  = JSON.parse((await Settings.get("nagsa_icons"))  || "[]");
+                const brands = JSON.parse((await Settings.get("nagsa_brands")) || "[]");
+                callback({ ok: true, icons, brands });
+            } catch (e) {
+                callback({ ok: false, msg: e.message, icons: [], brands: [] });
+            }
+        });
+
+        socket.on("nagsa:settings:save", async (data, callback) => {
+            try {
+                checkLogin(socket);
+                if (data.icons  !== undefined) await Settings.set("nagsa_icons",  JSON.stringify(data.icons),  "nagsa");
+                if (data.brands !== undefined) await Settings.set("nagsa_brands", JSON.stringify(data.brands), "nagsa");
+                callback({ ok: true });
+            } catch (e) {
+                callback({ ok: false, msg: e.message });
             }
         });
 

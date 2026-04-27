@@ -38,7 +38,7 @@ class UptimeKumaServer {
      */
     maintenanceList = {};
 
-    entryPage = "dashboard";
+    entryPage = "nagsa-dashboard";
     app = undefined;
     httpServer = undefined;
     io = undefined;

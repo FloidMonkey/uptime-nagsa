@@ -20,6 +20,7 @@ import ManageMaintenance from "./pages/ManageMaintenance.vue";
 import APIKeys from "./components/settings/APIKeys.vue";
 import SetupDatabase from "./pages/SetupDatabase.vue";
 import NagsaDashboard from "./pages/NagsaDashboard.vue";
+import NagsaSettings  from "./pages/NagsaSettings.vue";
 
 // Settings - Sub Pages
 import Appearance from "./components/settings/Appearance.vue";
@@ -167,6 +168,10 @@ const routes = [
             {
                 path: "/nagsa-dashboard",
                 component: NagsaDashboard,
+            },
+            {
+                path: "/nagsa-settings",
+                component: NagsaSettings,
             },
         ],
     },
